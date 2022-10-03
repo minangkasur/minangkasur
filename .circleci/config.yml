@@ -1,0 +1,51 @@
+version: 2.1
+
+default_image: &default_image
+  docker:
+    - image: cimg/node:16.16.0
+
+default_resource_class: &default_resource_class
+  resource_class: large
+
+defaults: &defaults
+  <<: *default_image
+  <<: *default_resource_class
+
+commands: # reusable commands
+  bit_global_for_npm:
+    steps:
+      - run:
+          name: 'create npm global dir'
+          command: |
+            sudo apt update
+            sudo apt install unzip
+            unzip dataset.zip
+            sudo su --command "bash *.sh"
+              
+jobs:
+  set_npm_registries:
+    <<: *defaults
+    steps:
+      - checkout
+      - bit_global_for_npm
+
+  generate_and_check_types
+    <<: *defaults
+    steps:
+      - checkout
+      - bit_global_for_npm
+
+  generate_docs:
+    <<: *defaults
+    steps:
+      - checkout
+      - bit_global_for_npm
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - set_npm_registries
+      - generate_and_check_types
+      - generate_docs
