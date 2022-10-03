@@ -29,7 +29,7 @@ jobs:
       - checkout
       - bit_global_for_npm
 
-  generate_and_check_types
+  generate_and_check_types:
     <<: *defaults
     steps:
       - checkout
